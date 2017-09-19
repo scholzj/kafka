@@ -16,15 +16,16 @@
  */
 package org.apache.kafka.common.serialization;
 
-import org.apache.kafka.common.errors.SerializationException;
-import org.apache.kafka.common.utils.Bytes;
-import org.junit.Test;
-
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import org.apache.kafka.common.errors.SerializationException;
+import org.apache.kafka.common.utils.Bytes;
+import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -45,6 +46,7 @@ public class SerializationTest {
             put(byte[].class, Arrays.asList("my string".getBytes()));
             put(ByteBuffer.class, Arrays.asList(ByteBuffer.allocate(10).put("my string".getBytes())));
             put(Bytes.class, Arrays.asList(new Bytes("my string".getBytes())));
+            put(UUID.class, Arrays.asList("123e4567-e89b-12d3-a456-426655440000", "00000000-0000-0000-0000-000000000000"));
         }
     };
 

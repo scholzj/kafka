@@ -16,10 +16,11 @@
  */
 package org.apache.kafka.common.serialization;
 
-import org.apache.kafka.common.utils.Bytes;
-
 import java.nio.ByteBuffer;
 import java.util.Map;
+import java.util.UUID;
+
+import org.apache.kafka.common.utils.Bytes;
 
 /**
  * Factory for creating serializers / deserializers.
@@ -94,6 +95,12 @@ public class Serdes {
         }
     }
 
+    static public final class UUIDSerde extends WrapperSerde<UUID> {
+        public UUIDSerde() {
+            super(new UUIDSerializer(), new UUIDDeserializer());
+        }
+    }
+
     static public final class ByteBufferSerde extends WrapperSerde<ByteBuffer> {
         public ByteBufferSerde() {
             super(new ByteBufferSerializer(), new ByteBufferDeserializer());
@@ -114,6 +121,10 @@ public class Serdes {
 
     @SuppressWarnings("unchecked")
     static public <T> Serde<T> serdeFrom(Class<T> type) {
+        if (UUID.class.isAssignableFrom(type)) {
+            return (Serde<T>) String();
+        }
+
         if (String.class.isAssignableFrom(type)) {
             return (Serde<T>) String();
         }
@@ -212,6 +223,11 @@ public class Serdes {
     static public Serde<String> String() {
         return new StringSerde();
     }
+
+    /*
+    * A serde for nullable {@code UUID} type.
+    */
+    static public Serde<UUID> UUID() { return new UUIDSerde(); }
 
     /*
      * A serde for nullable {@code ByteBuffer} type.
